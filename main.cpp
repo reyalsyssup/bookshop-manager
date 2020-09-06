@@ -64,4 +64,25 @@ void sell(std::string id) {
 int main() {
     std::string const shopName = "Book Shop";
     std::cout << shopName << std::endl;
+    while(true) {
+        std::cout << "Select option [add|sell|remove] > ";
+        std::string option;
+        std::cin >> option;
+        // clear buffer
+        std::cin.ignore();
+        if(option == "add") {
+            std::string author, title, stringPrice;
+            std::cout << "Enter the name of the author > ";
+            std::cin >> author;
+            std::cin.ignore();
+            std::cout << "Enter the title > ";
+            std::cin >> title;
+            std::cin.ignore();
+            std::cout << "Enter the price > ";
+            std::cin >> stringPrice;
+            double price = std::stod(stringPrice);
+            Book newBook(title, author, price);
+            books.push_back(newBook);
+        }
+    }
 }
