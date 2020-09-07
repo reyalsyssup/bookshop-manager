@@ -49,6 +49,11 @@ class Book {
             this->price = price;
             this->id = generate_uuid_v4();
         }
+        std::string getData(std::string data) {
+            if(data == "title") return this->title;
+            if(data == "author") return this->author;
+            return "null";
+        }
 };
 std::vector<Book> books;
 
@@ -56,6 +61,7 @@ void sell(std::string id) {
     for(int i = 0; i < books.size(); i++) {
         if(books[i].id == id) {
             books.erase(books.begin() + i);
+            std::cout << "Sold " << books[i].title << " for $" << books[i].price << std::endl;
             break;
         }
     }
@@ -65,7 +71,7 @@ int main() {
     std::string const shopName = "Book Shop";
     std::cout << shopName << std::endl;
     while(true) {
-        std::cout << "Select option [add|sell|remove] > ";
+        std::cout << "Select option [add|sell|find|remove] > ";
         std::string option;
         std::cin >> option;
         // clear buffer
@@ -83,6 +89,32 @@ int main() {
             double price = std::stod(stringPrice);
             Book newBook(title, author, price);
             books.push_back(newBook);
+        }
+        if(option == "sell") {
+            std::string option;
+            std::cout << "What would you like to search by? [title|author|id] > ";
+            std::cin >> option;
+            std::cin.ignore();
+            if(option == "title" || option == "author" || option == "id") {
+                std::string data;
+                std::cout << "Enter value of " << option << " > ";
+                std::cin >> data;
+                std::cin.ignore();
+                std::vector<Book> matches;
+                for(Book book : books) {
+                    if(book.getData(option) == data) matches.push_back(book); 
+                }
+                if(matches.size() != 0) {
+                    if(matches.size() > 1) {
+                        std::cout << "More than one match\n";
+                        for(Book book : matches) {
+                            std::cout << book.title << "\n" << book.author << "\n" << book.price << "\n\n";
+                        }
+                    } else {
+                        sell(matches[0].id);
+                    }
+                }
+            }
         }
     }
 }
