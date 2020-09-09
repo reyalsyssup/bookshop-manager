@@ -53,6 +53,7 @@ class Book {
         std::string getData(std::string data) {
             if(data == "title") return this->title;
             if(data == "author") return this->author;
+            if(data == "genre") return this->genre;
             return "null";
         }
 };
@@ -66,6 +67,14 @@ void sell(std::string id) {
             break;
         }
     }
+}
+
+std::vector<Book> find(std::string filter, std::string data) {
+    std::vector<Book> matches;
+    for(Book book : books) {
+        if(book.getData(filter) == data) matches.push_back(book); 
+    }
+    return matches;
 }
 
 int main() {
@@ -117,6 +126,22 @@ int main() {
                         }
                     } else sell(matches[0].id);
                 }
+            }
+        }
+        if(option == "find") {
+            std::cout << "How would you like to filter [title|author|genre] > ";
+            std::string filter;
+            std::cin >> filter;
+            std::cin.ignore();
+            if(filter == "title" || filter == "author" || filter == "genre") {
+                std::string data;
+                std::cout << "Enter the " << filter << " of the book > ";
+                std::cin >> data;
+                std::cin.ignore();
+                std::vector<Book> matches = find(filter, data);
+                if(matches.size() != 0) {
+                    if(matches.size() == 1) std::cout << "\nFound match:\n\nTitle: " << matches[0].title << "\nAuthor: " << matches[0].author << "\nGenre: " << matches[0].genre << "\nPrice: " << matches[0].price << "\n" << std::endl; 
+                } else std::cout << "No matches found for the filter: " << filter << ", and the " << filter << ": " << data << std::endl;
             }
         }
     }
