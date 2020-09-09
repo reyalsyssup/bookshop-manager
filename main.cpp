@@ -41,12 +41,13 @@ class Book {
     public:
         std::string id;
         bool sold = false;
-        std::string title, author;
+        std::string title, author, genre;
         double price; 
-        Book(std::string title, std::string author, double price) {
+        Book(std::string title, std::string author, std::string genre, double price) {
             this->title = title;
             this->author = author;
             this->price = price;
+            this->genre = genre;
             this->id = generate_uuid_v4();
         }
         std::string getData(std::string data) {
@@ -71,31 +72,35 @@ int main() {
     std::string const shopName = "Book Shop";
     std::cout << shopName << std::endl;
     while(true) {
-        std::cout << "Select option [add|sell|find|remove] > ";
+        std::cout << "Select option [add|sell|find|remove|exit] > ";
         std::string option;
         std::cin >> option;
         // clear buffer
         std::cin.ignore();
+        if(option == "exit") return 0;
         if(option == "add") {
-            std::string author, title, stringPrice;
+            std::string author, title, stringPrice, genre;
             std::cout << "Enter the name of the author > ";
             std::cin >> author;
             std::cin.ignore();
             std::cout << "Enter the title > ";
             std::cin >> title;
             std::cin.ignore();
+            std::cout << "Enter the genre > ";
+            std::cin >> genre;
+            std::cin.ignore();
             std::cout << "Enter the price > ";
             std::cin >> stringPrice;
             double price = std::stod(stringPrice);
-            Book newBook(title, author, price);
+            Book newBook(title, author, genre, price);
             books.push_back(newBook);
         }
         if(option == "sell") {
             std::string option;
-            std::cout << "What would you like to search by? [title|author|id] > ";
+            std::cout << "What would you like to search by? [title|author|genre|id] > ";
             std::cin >> option;
             std::cin.ignore();
-            if(option == "title" || option == "author" || option == "id") {
+            if(option == "title" || option == "author" || option == "id" || option == "genre") {
                 std::string data;
                 std::cout << "Enter value of " << option << " > ";
                 std::cin >> data;
@@ -106,13 +111,11 @@ int main() {
                 }
                 if(matches.size() != 0) {
                     if(matches.size() > 1) {
-                        std::cout << "More than one match\n";
+                        std::cout << "\nMore than one match:\n";
                         for(Book book : matches) {
-                            std::cout << book.title << "\n" << book.author << "\n" << book.price << "\n\n";
+                            std::cout << book.title << "\n" << book.author << "\n" << book.price << book.genre << "\n\n";
                         }
-                    } else {
-                        sell(matches[0].id);
-                    }
+                    } else sell(matches[0].id);
                 }
             }
         }
